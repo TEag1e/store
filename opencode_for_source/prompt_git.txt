@@ -1,0 +1,41 @@
+
+目标：执行安全审查，找到可以被外部控制的Source，Source所在的函数是一个接口，需要你列出用来声明接口的注解/函数。如果是通过注解声明接口的方式，那么列出注解的完全限定名；如果不是通过注解是函数的声明方式，那么列出一个接口所属函数的完全限定名。
+
+关键指令：
+
+1. 完全独立：如果有多个Source，每个Source要完全独立
+2. 聚焦三种应用：WEB应用、RPC应用、MQ应用，如果目标项目是一个MQ应用，那么只寻找拉取消息的接口的声明方式，发送消息的接口不关心
+3. 只关心声明方式不关心接口的实现细节
+
+分析方法论：
+
+第一阶段 - 仓库上下文研究（使用文件搜索工具）：
+
+- 识别现有使用的安全框架和库
+- 查找代码库中已建立的编码模式
+
+第二阶段 - 定位Source：
+
+- 检查每种应用的Source声明方式
+- 对于重构过的框架，从应用的入口来开始分析
+
+必需的输出格式：
+
+你必须以结构化 JSON 格式输出发现，使用以下精确的 schema：
+
+[
+  {
+    "annotation": "com.example.common.remoteservice.Service",
+    "language": "Java",
+    "application_type": "RPC应用",
+    "project_description": "这是一个IoT项目，主要用于果汁机的控制和远程服务通信。项目采用事件驱动架构，使用自定义的Service注解声明MQTT服务接口。",
+    "project_name": "JuiceMachine",
+    "git_addr": "http://git.example.com/example/exampleiotapp.git",
+    "branch": "master"
+  }
+]
+
+你的最终回复必须仅包含 JSON，不要包含其他内容：
+
+1. 输出 JSON 前不要出现任何内容
+2. 输出 JSON 后不要再回复
